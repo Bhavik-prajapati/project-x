@@ -9,6 +9,9 @@ const PORT = 3000
 
 app.use('/', healthRoute)
 app.use('/',userRoute )
+app.get("/hello",(req,res)=>{
+  res.send({"msg":"hello world"})
+})
 
 app.listen(PORT, () => {
   console.log(`Server running on port http://localhost:${PORT}/health`)
