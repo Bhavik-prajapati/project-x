@@ -1,10 +1,6 @@
 pipeline {
   agent any
 
-  tools {
-    nodejs 'node18'
-  }
-
   stages {
 
     stage('Checkout') {
@@ -13,19 +9,16 @@ pipeline {
       }
     }
 
-    stage('Install Dependencies') {
+    stage('Build & Test (Docker)') {
       steps {
-        sh 'npm install'
+        sh '''
+          docker build -t project-x-test .
+          docker run --rm project-x-test npm test
+        '''
       }
     }
 
-    stage('Run Tests') {
-      steps {
-        sh 'npm test'
-      }
-    }
-
-    stage('Build & Deploy') {
+    stage('Deploy') {
       steps {
         sh '''
           docker-compose down
@@ -37,10 +30,10 @@ pipeline {
 
   post {
     success {
-      echo '✅ Pipeline completed successfully'
+      echo '✅ CI/CD Pipeline Success'
     }
     failure {
-      echo '❌ Pipeline failed'
+      echo '❌ CI/CD Pipeline Failed'
     }
   }
 }
