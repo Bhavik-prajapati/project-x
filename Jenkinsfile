@@ -18,14 +18,23 @@ pipeline {
       }
     }
 
-    stage('Deploy') {
-      steps {
-        sh '''
-          docker-compose down
-          docker-compose up -d --build
-        '''
-      }
-    }
+   stage('Deploy') {
+  steps {
+    sh '''
+      cat <<EOF > .env
+DB_HOST=postgres
+DB_USER=postgres
+DB_PASSWORD=postgres
+DB_NAME=userdb
+PORT=3000
+EOF
+
+      docker-compose down
+      docker-compose up -d --build
+    '''
+  }
+}
+
   }
 
   post {
